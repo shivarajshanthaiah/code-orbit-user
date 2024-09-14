@@ -160,4 +160,24 @@ func (u *UserService) UnBlockUserService(p *pb.ID) (*pb.Response, error) {
 	}, nil
 }
 
+// FindAllUsersService implements interfaces.UserServiceInter.
+func (u *UserService) FindAllUsersService(p *pb.NoParam) (*pb.UserList, error) {
+	result, err := u.Repo.FindAllUsers()
+	if err != nil {
+		return nil, err
+	}
 
+	var userList pb.UserList
+	for _, user := range *result {
+		userList.Users = append(userList.Users, &pb.Profile{
+			User_ID:                user.UserID,
+			User_Name:              user.UserName,
+			Email:                  user.Email,
+			Phone:                  user.Phone,
+			Is_Prime_Member:        user.IsPrimeMember,
+			Is_Blocked:             user.IsBlocked,
+			Membership_Expiry_Date: timestamppb.New(user.MembershipExpiryDate),
+		})
+	}
+	return &userList, nil
+}
