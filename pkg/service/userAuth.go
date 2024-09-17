@@ -11,7 +11,6 @@ import (
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/model"
 	pb "github.com/shivaraj-shanthaiah/code_orbit_user/pkg/proto"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/utils"
-	"gorm.io/gorm"
 )
 
 // SignupService implements interfaces.UserServiceInter.
@@ -34,15 +33,42 @@ func (u *UserService) SignupService(p *pb.Signup) (*pb.Response, error) {
 		Phone:    p.Phone,
 	}
 
-	_, err = u.Repo.FindUserByEmail(user.Email)
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
+	existingUserEmail, err := u.Repo.FindUserByEmail(user.Email)
+	if err != nil {
+		fmt.Println("error checking user email:", err)
 		return &pb.Response{
 			Status:  pb.Response_ERROR,
-			Message: "email already exists",
+			Message: "error checking user email",
 			Payload: &pb.Response_Error{
 				Error: err.Error(),
 			},
 		}, err
+	}
+
+	if existingUserEmail != nil {
+		return &pb.Response{
+			Status:  pb.Response_ERROR,
+			Message: "email already exists",
+		}, nil
+	}
+
+	existingUserPhone, err := u.Repo.FindUserByPhone(user.Phone)
+	if err != nil {
+		fmt.Println("error checking user phone:", err)
+		return &pb.Response{
+			Status:  pb.Response_ERROR,
+			Message: "error checking user phone",
+			Payload: &pb.Response_Error{
+				Error: err.Error(),
+			},
+		}, err
+	}
+
+	if existingUserPhone != nil {
+		return &pb.Response{
+			Status:  pb.Response_ERROR,
+			Message: "phone number already exists",
+		}, nil
 	}
 
 	resp, err := u.twilio.SendTwilioOTP(p.Phone)

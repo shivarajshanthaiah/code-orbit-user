@@ -7,7 +7,7 @@ type User struct {
 	UserName             string    `gorm:"not null"`
 	Email                string    `gorm:"not null;unique"`
 	Password             string    `gorm:"not null"`
-	Phone                string    `gorm:"not null"`
+	Phone                string    `gorm:"not null;unique"`
 	IsPrimeMember        bool      `gorm:"default:false"`
 	IsBlocked            bool      `gorm:"default:false"`
 	MembershipExpiryDate time.Time `gorm:"default:null"`
