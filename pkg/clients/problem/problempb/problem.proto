@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "./";
+
+service ProblemService{
+    rpc GetAllProblems(ProbNoParam) returns(ProblemList);
+}
+
+message ProblemList {
+    repeated Problem problems = 1;
+}
+
+message Problem{
+    uint32 ID = 1;
+    string Title = 2;
+    string Discription = 3;
+    string Difficulty = 4;
+    string Tags = 5;
+    bool Is_Premium = 6;
+}
+
+message ProblemResponse {
+    enum Status {
+        OK = 0;
+        ERROR = 1;
+    }
+
+    Status status = 1;
+    string message = 2;
+    oneof payload {
+        string error = 3;
+        string data = 4;
+    }
+}
+
+message ProbNoParam{}

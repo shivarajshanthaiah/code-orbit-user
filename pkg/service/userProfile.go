@@ -161,7 +161,7 @@ func (u *UserService) UnBlockUserService(p *pb.ID) (*pb.Response, error) {
 }
 
 // FindAllUsersService implements interfaces.UserServiceInter.
-func (u *UserService) FindAllUsersService(p *pb.NoParam) (*pb.UserList, error) {
+func (u *UserService) FindAllUsersService(p *pb.UserNoParam) (*pb.UserList, error) {
 	result, err := u.Repo.FindAllUsers()
 	if err != nil {
 		return nil, err

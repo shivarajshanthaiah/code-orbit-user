@@ -12,6 +12,7 @@ type UserServiceInter interface {
 	ChangePasswordService(p *pb.Password) (*pb.Response, error)
 	BlockUserService(p *pb.ID) (*pb.Response, error)
 	UnBlockUserService(p *pb.ID) (*pb.Response, error)
-	FindAllUsersService(p *pb.NoParam)(*pb.UserList, error)
+	FindAllUsersService(p *pb.UserNoParam) (*pb.UserList, error)
 
+	GetAllProblemsService(p *pb.UserNoParam) (*pb.UserProblemList, error)
 }

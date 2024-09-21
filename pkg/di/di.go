@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/shivaraj-shanthaiah/code_orbit_user/config"
+	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/clients/problem"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/db"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/handler"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/repo"
@@ -22,9 +23,14 @@ func Init() {
 	twilio := config.SetupTwilio(cnfg)
 	db := db.ConnectDB(cnfg)
 
+	problemClient, err := problem.ClientDial(*cnfg)
+	if err != nil {
+		log.Fatal("failed to connect to problem client")
+	}
+
 	userRepo := repo.NewUserRepository(db)
 
-	userService := service.NewUserService(userRepo, redis, twilio)
+	userService := service.NewUserService(userRepo, redis, twilio, problemClient)
 
 	userHandler := handler.NewUserHandler(userService)
 

@@ -46,7 +46,7 @@ func (u *UserHandler) UnBlockUser(ctx context.Context, p *pb.ID) (*pb.Response, 
 	return response, nil
 }
 
-func (u *UserHandler) GetAllUsers(ctx context.Context, p *pb.NoParam) (*pb.UserList, error) {
+func (u *UserHandler) GetAllUsers(ctx context.Context, p *pb.UserNoParam) (*pb.UserList, error) {
 	response, err := u.SVC.FindAllUsersService(p)
 	if err != nil {
 		return response, err

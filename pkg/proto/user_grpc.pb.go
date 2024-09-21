@@ -30,7 +30,8 @@ type UserServiceClient interface {
 	ChangePassword(ctx context.Context, in *Password, opts ...grpc.CallOption) (*Response, error)
 	BlockUser(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Response, error)
 	UnBlockUser(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Response, error)
-	GetAllUsers(ctx context.Context, in *NoParam, opts ...grpc.CallOption) (*UserList, error)
+	GetAllUsers(ctx context.Context, in *UserNoParam, opts ...grpc.CallOption) (*UserList, error)
+	UserGetAllProblems(ctx context.Context, in *UserNoParam, opts ...grpc.CallOption) (*UserProblemList, error)
 }
 
 type userServiceClient struct {
@@ -113,9 +114,18 @@ func (c *userServiceClient) UnBlockUser(ctx context.Context, in *ID, opts ...grp
 	return out, nil
 }
 
-func (c *userServiceClient) GetAllUsers(ctx context.Context, in *NoParam, opts ...grpc.CallOption) (*UserList, error) {
+func (c *userServiceClient) GetAllUsers(ctx context.Context, in *UserNoParam, opts ...grpc.CallOption) (*UserList, error) {
 	out := new(UserList)
 	err := c.cc.Invoke(ctx, "/pb.UserService/GetAllUsers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UserGetAllProblems(ctx context.Context, in *UserNoParam, opts ...grpc.CallOption) (*UserProblemList, error) {
+	out := new(UserProblemList)
+	err := c.cc.Invoke(ctx, "/pb.UserService/UserGetAllProblems", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +144,8 @@ type UserServiceServer interface {
 	ChangePassword(context.Context, *Password) (*Response, error)
 	BlockUser(context.Context, *ID) (*Response, error)
 	UnBlockUser(context.Context, *ID) (*Response, error)
-	GetAllUsers(context.Context, *NoParam) (*UserList, error)
+	GetAllUsers(context.Context, *UserNoParam) (*UserList, error)
+	UserGetAllProblems(context.Context, *UserNoParam) (*UserProblemList, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -166,8 +177,11 @@ func (UnimplementedUserServiceServer) BlockUser(context.Context, *ID) (*Response
 func (UnimplementedUserServiceServer) UnBlockUser(context.Context, *ID) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnBlockUser not implemented")
 }
-func (UnimplementedUserServiceServer) GetAllUsers(context.Context, *NoParam) (*UserList, error) {
+func (UnimplementedUserServiceServer) GetAllUsers(context.Context, *UserNoParam) (*UserList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllUsers not implemented")
+}
+func (UnimplementedUserServiceServer) UserGetAllProblems(context.Context, *UserNoParam) (*UserProblemList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserGetAllProblems not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -327,7 +341,7 @@ func _UserService_UnBlockUser_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _UserService_GetAllUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NoParam)
+	in := new(UserNoParam)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -339,7 +353,25 @@ func _UserService_GetAllUsers_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: "/pb.UserService/GetAllUsers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetAllUsers(ctx, req.(*NoParam))
+		return srv.(UserServiceServer).GetAllUsers(ctx, req.(*UserNoParam))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UserGetAllProblems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserNoParam)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UserGetAllProblems(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserService/UserGetAllProblems",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UserGetAllProblems(ctx, req.(*UserNoParam))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -386,6 +418,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllUsers",
 			Handler:    _UserService_GetAllUsers_Handler,
+		},
+		{
+			MethodName: "UserGetAllProblems",
+			Handler:    _UserService_UserGetAllProblems_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
