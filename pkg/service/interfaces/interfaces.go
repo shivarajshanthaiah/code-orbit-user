@@ -1,6 +1,10 @@
 package interfaces
 
-import pb "github.com/shivaraj-shanthaiah/code_orbit_user/pkg/proto"
+import (
+	"context"
+
+	pb "github.com/shivaraj-shanthaiah/code_orbit_user/pkg/proto"
+)
 
 type UserServiceInter interface {
 	SignupService(p *pb.Signup) (*pb.Response, error)
@@ -15,4 +19,5 @@ type UserServiceInter interface {
 	FindAllUsersService(p *pb.UserNoParam) (*pb.UserList, error)
 
 	GetAllProblemsService(p *pb.UserNoParam) (*pb.UserProblemList, error)
+	GetProblemWithTestCasesService(ctx context.Context, req *pb.UserProblemId) (*pb.UserTestcaseResponse, error)
 }

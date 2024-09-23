@@ -6,7 +6,39 @@ option go_package = "./";
 
 service ProblemService{
     rpc GetAllProblems(ProbNoParam) returns(ProblemList);
+    rpc GetProblemWithTestCases(ProblemId) returns (GetProblemResponse);
 }
+
+message TestCase{
+    string test_case_id = 1;
+    string input = 2;
+    string expected_output = 3;
+}
+
+message ProblemWithTestCases {
+    Problem problem = 1;
+    repeated TestCase test_cases = 2;
+}
+
+message GetProblemResponse {
+    enum Status {
+        OK = 0;
+        ERROR = 1;
+    }
+
+    Status status = 1;
+    string message = 2;
+    oneof payload {
+        string error = 3;
+        ProblemWithTestCases data = 4;
+    }
+}
+
+message ProblemId {
+    int32 ID = 1;
+}
+
+
 
 message ProblemList {
     repeated Problem problems = 1;
@@ -18,7 +50,7 @@ message Problem{
     string Discription = 3;
     string Difficulty = 4;
     string Tags = 5;
-    bool Is_Premium = 6;
+    bool IsPremium = 6;
 }
 
 message ProblemResponse {

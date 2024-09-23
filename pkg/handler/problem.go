@@ -13,3 +13,11 @@ func (u *UserHandler) UserGetAllProblems(ctx context.Context, p *pb.UserNoParam)
 	}
 	return response, nil
 }
+
+func (u *UserHandler) UserGetProblemWithTestCases(ctx context.Context, p *pb.UserProblemId) (*pb.UserTestcaseResponse, error) {
+	response, err := u.SVC.GetProblemWithTestCasesService(ctx, p)
+	if err != nil {
+		return response, err
+	}
+	return response, nil
+}
