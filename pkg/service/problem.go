@@ -23,7 +23,7 @@ func (u *UserService) GetAllProblemsService(p *pb.UserNoParam) (*pb.UserProblemL
 			Title:       problem.Title,
 			Discription: problem.Discription,
 			Difficulty:  problem.Difficulty,
-			Tags:        problem.Tags,
+			Type:        problem.Type,
 			IsPremium:   problem.IsPremium,
 		}
 		problemList.Problems = append(problemList.Problems, adProblem)
@@ -82,7 +82,7 @@ func (a *UserService) GetProblemWithTestCasesService(ctx context.Context, req *p
 					Title:       problem.Title,
 					Discription: problem.Discription,
 					Difficulty:  problem.Difficulty,
-					Tags:        problem.Tags,
+					Type:        problem.Type,
 					IsPremium:   problem.IsPremium,
 				},
 				TestCases: adminTestCases,

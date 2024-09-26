@@ -20,4 +20,6 @@ type UserServiceInter interface {
 
 	GetAllProblemsService(p *pb.UserNoParam) (*pb.UserProblemList, error)
 	GetProblemWithTestCasesService(ctx context.Context, req *pb.UserProblemId) (*pb.UserTestcaseResponse, error)
+
+	SubmitCodeService(ctx context.Context, req *pb.UserSubmissionRequest) (*pb.UserSubmissionResponse, error)
 }
