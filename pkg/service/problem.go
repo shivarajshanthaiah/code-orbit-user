@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	problempb "github.com/shivaraj-shanthaiah/code_orbit_user/pkg/clients/problem/problempb"
 	pb "github.com/shivaraj-shanthaiah/code_orbit_user/pkg/proto"
@@ -20,8 +21,7 @@ func (u *UserService) GetAllProblemsService(p *pb.UserNoParam) (*pb.UserProblemL
 	var problemList pb.UserProblemList
 	for _, problem := range result.Problems {
 		adProblem := &pb.UserProblem{
-			ID:    problem.ID,
-			Title: problem.Title,
+			ID: problem.ID,
 			// Discription: problem.Discription,
 			Difficulty: problem.Difficulty,
 			Type:       problem.Type,
@@ -111,5 +111,29 @@ func (a *UserService) GetProblemWithTestCasesService(ctx context.Context, req *p
 				TestCases: adminTestCases,
 			},
 		},
+	}, nil
+}
+
+func (u *UserService) GetUserStatsService(ctx context.Context, p *pb.ID) (*pb.UserStatsResponse, error) {
+
+	user, err := u.Repo.FindUserByID(p.ID)
+	if err != nil {
+		return nil, errors.New("error fetching user details: " + err.Error())
+	}
+
+	result, err := u.ProblemClient.GetUserStats(ctx, &problempb.UserID{ID: p.ID})
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.UserStatsResponse{
+		UserId:                     p.ID,
+		UserName:                   user.UserName,
+		TotalAttempts:              result.TotalAttempts,
+		TotalSuccessfulSubmissions: result.TotalSuccessfulSubmissions,
+		TotalFailedSubmissions:     result.TotalFailedSubmissions,
+		EasyAttempts:               result.EasyAttempts,
+		MediumAttempts:             result.MediumAttempts,
+		HardAttempts:               result.HardAttempts,
 	}, nil
 }

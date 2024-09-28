@@ -22,7 +22,19 @@ service UserService{
     rpc UserGetProblemWithTestCases(UserProblemId) returns(UserTestcaseResponse);
 
     rpc SubmitCode(UserSubmissionRequest) returns(UserSubmissionResponse);
+    rpc GetUserStats(ID) returns(UserStatsResponse);
 
+}
+
+message UserStatsResponse {
+    string user_id = 1;
+    string user_name = 2;
+    int32 total_attempts = 3;
+    int32 total_successful_submissions = 4;
+    int32 total_failed_submissions = 5;
+    int32 easy_attempts = 6;
+    int32 medium_attempts = 7;
+    int32 hard_attempts = 8;
 }
 
 message UserSubmissionResponse {
@@ -92,7 +104,7 @@ message Signup {
     string Email = 2;
     string Password = 3;
     string Phone = 4;
-};
+}
 
 message OTP {
     string Email = 1;

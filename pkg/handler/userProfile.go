@@ -53,3 +53,11 @@ func (u *UserHandler) GetAllUsers(ctx context.Context, p *pb.UserNoParam) (*pb.U
 	}
 	return response, nil
 }
+
+func (u *UserHandler) GetUserStats(ctx context.Context, p *pb.ID) (*pb.UserStatsResponse, error) {
+	response, err := u.SVC.GetUserStatsService(ctx, p)
+	if err != nil {
+		return response, err
+	}
+	return response, nil
+}
