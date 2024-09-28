@@ -60,8 +60,6 @@ message ProblemId {
     int32 ID = 1;
 }
 
-
-
 message ProblemList {
     repeated Problem problems = 1;
 }

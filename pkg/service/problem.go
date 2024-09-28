@@ -5,6 +5,7 @@ import (
 
 	problempb "github.com/shivaraj-shanthaiah/code_orbit_user/pkg/clients/problem/problempb"
 	pb "github.com/shivaraj-shanthaiah/code_orbit_user/pkg/proto"
+	"github.com/shivaraj-shanthaiah/code_orbit_user/utils"
 )
 
 // GetAllProblemsService implements interfaces.UserServiceInter.
@@ -19,12 +20,12 @@ func (u *UserService) GetAllProblemsService(p *pb.UserNoParam) (*pb.UserProblemL
 	var problemList pb.UserProblemList
 	for _, problem := range result.Problems {
 		adProblem := &pb.UserProblem{
-			ID:   problem.ID,
-			Title:       problem.Title,
-			Discription: problem.Discription,
-			Difficulty:  problem.Difficulty,
-			Type:        problem.Type,
-			IsPremium:   problem.IsPremium,
+			ID:    problem.ID,
+			Title: problem.Title,
+			// Discription: problem.Discription,
+			Difficulty: problem.Difficulty,
+			Type:       problem.Type,
+			IsPremium:  problem.IsPremium,
 		}
 		problemList.Problems = append(problemList.Problems, adProblem)
 	}
@@ -33,7 +34,29 @@ func (u *UserService) GetAllProblemsService(p *pb.UserNoParam) (*pb.UserProblemL
 }
 
 func (a *UserService) GetProblemWithTestCasesService(ctx context.Context, req *pb.UserProblemId) (*pb.UserTestcaseResponse, error) {
-	// Call the Problem Service
+	userID, err := utils.GetUserIDFromContext(ctx)
+	if err != nil {
+		return &pb.UserTestcaseResponse{
+			Status:  pb.UserTestcaseResponse_ERROR,
+			Message: "User not authenticated",
+			Payload: &pb.UserTestcaseResponse_Error{
+				Error: "User authentication failed",
+			},
+		}, err
+	}
+
+	user, err := a.Repo.FindUserByID(userID)
+	if err != nil {
+		return &pb.UserTestcaseResponse{
+			Status:  pb.UserTestcaseResponse_ERROR,
+			Message: "User not found",
+			Payload: &pb.UserTestcaseResponse_Error{
+				Error: err.Error(),
+			},
+		}, err
+	}
+
+	// Fetch the problem details from Problem Service
 	result, err := a.ProblemClient.GetProblemWithTestCases(ctx, &problempb.ProblemId{
 		ID: req.ID,
 	})
@@ -47,13 +70,13 @@ func (a *UserService) GetProblemWithTestCasesService(ctx context.Context, req *p
 		}, err
 	}
 
-	// Check if there was an error in the ProblemService response
-	if result.Status == problempb.GetProblemResponse_ERROR {
+	// Check if problem is premium and if the user is not a premium member
+	if result.GetData().Problem.IsPremium && !user.IsPrimeMember {
 		return &pb.UserTestcaseResponse{
 			Status:  pb.UserTestcaseResponse_ERROR,
-			Message: result.Message,
+			Message: "This is a premium problem. Please subscribe to access this problem.",
 			Payload: &pb.UserTestcaseResponse_Error{
-				Error: result.GetError(),
+				Error: "User is not a premium member",
 			},
 		}, nil
 	}
@@ -71,14 +94,14 @@ func (a *UserService) GetProblemWithTestCasesService(ctx context.Context, req *p
 		})
 	}
 
-	// Prepare the response for the AdminService
+	// Return the problem and test cases
 	return &pb.UserTestcaseResponse{
 		Status:  pb.UserTestcaseResponse_OK,
 		Message: "Problem and test cases fetched successfully",
 		Payload: &pb.UserTestcaseResponse_Data{
 			Data: &pb.UserProblemWithTestCases{
 				Problem: &pb.UserProblem{
-					ID:   problem.ID,
+					ID:          problem.ID,
 					Title:       problem.Title,
 					Discription: problem.Discription,
 					Difficulty:  problem.Difficulty,
