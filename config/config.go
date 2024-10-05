@@ -12,6 +12,7 @@ type Config struct {
 	Sslmode      string `mapstructure:"SSL"`
 	GrpcPort     string `mapstructure:"GRPCPORT"`
 	ProblemPort  string `mapstructure:"GRPCPROBLEMPORT"`
+	AdminPort    string `mapstructure:"GRPCADMINPORT"`
 	SID          string `mapstructure:"SID"`
 	TOKEN        string `mapstructure:"TOKEN"`
 	SERVICETOKEN string `mapstructure:"SERVICETOKEN"`

@@ -21,8 +21,8 @@ func (u *UserService) GetAllProblemsService(p *pb.UserNoParam) (*pb.UserProblemL
 	var problemList pb.UserProblemList
 	for _, problem := range result.Problems {
 		adProblem := &pb.UserProblem{
-			ID: problem.ID,
-			// Discription: problem.Discription,
+			ID:    problem.ID,
+			Title: problem.Title,
 			Difficulty: problem.Difficulty,
 			Type:       problem.Type,
 			IsPremium:  problem.IsPremium,

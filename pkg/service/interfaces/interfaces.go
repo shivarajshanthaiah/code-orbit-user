@@ -23,4 +23,6 @@ type UserServiceInter interface {
 
 	SubmitCodeService(ctx context.Context, req *pb.UserSubmissionRequest) (*pb.UserSubmissionResponse, error)
 	GetUserStatsService(ctx context.Context, p *pb.ID) (*pb.UserStatsResponse, error)
+
+	GetAllPlansService(p *pb.UserNoParam) (*pb.UPlanList, error)
 }

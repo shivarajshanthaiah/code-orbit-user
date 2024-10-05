@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "./";
+
+service AdminService {    
+    rpc GetAllPlans(AdNoParam) returns(AdPlanList);
+}
+
+message AdNoParam{}
+
+message AdPlanList {
+    repeated AdSubscription plans = 1;
+}
+
+message AdSubscription {
+    uint32 ID = 1;
+    string plan = 2;      
+    double price = 3;      
+    double gst = 4;        
+    double total_price = 5;
+}
