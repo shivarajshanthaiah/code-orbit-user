@@ -18,6 +18,8 @@ type Config struct {
 	SERVICETOKEN string `mapstructure:"SERVICETOKEN"`
 	Phone        string `mapstructure:"PHONE"`
 	REDISHOST    string `mapstructure:"REDISHOST"`
+	RPAPIKey    string `mapstructure:"RAZORPAY_KEY_ID"`
+	RPAPISecret string `mapstructure:"RAZORPAY_SECRET"`
 }
 
 func LoadConfig() *Config {

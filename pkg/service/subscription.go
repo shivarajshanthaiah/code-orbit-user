@@ -20,6 +20,7 @@ func (u *UserService) GetAllPlansService(p *pb.UserNoParam) (*pb.UPlanList, erro
 		uPlan := &pb.USubscription{
 			ID:         plan.ID,
 			Plan:       plan.Plan,
+			Duration:   plan.Duration,
 			Price:      plan.Price,
 			Gst:        plan.Gst,
 			TotalPrice: plan.TotalPrice,

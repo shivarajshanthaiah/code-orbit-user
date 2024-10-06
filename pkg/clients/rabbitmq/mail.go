@@ -1,10 +1,10 @@
 package rabbitmq
 
-func SendMail(email, message, subject string) {
+func SendMail(email, message, subject string) error{
 	msgs := Messages{
 		Email:    email,
 		Messages: message,
 		Subject:  subject,
 	}
-	PublishNotifications(msgs)
+	return PublishNotifications(msgs)
 }

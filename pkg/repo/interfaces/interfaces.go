@@ -9,4 +9,6 @@ type UserRepoInter interface {
 	FindUserByID(userID string) (*model.User, error)
 	UpdateUser(user *model.User) error
 	FindAllUsers() (*[]model.User, error)
+
+	CreateInvoice(invoice *model.Invoice) error
 }
