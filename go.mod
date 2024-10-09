@@ -5,6 +5,7 @@ go 1.22.3
 require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/rabbitmq/amqp091-go v1.10.0
+	github.com/razorpay/razorpay-go v1.3.2
 	github.com/redis/go-redis/v9 v9.6.1
 	github.com/spf13/viper v1.19.0
 	github.com/twilio/twilio-go v1.23.0

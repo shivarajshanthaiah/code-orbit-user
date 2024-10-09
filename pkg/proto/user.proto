@@ -27,6 +27,36 @@ service UserService{
     rpc UserGetAllPlans(UserNoParam) returns(UPlanList);
     rpc GenerateInvoice(InvoiceRequest) returns (Response);
     rpc GetUserInvoices(ID) returns (InvoiceList);
+    rpc MakePayment(PaymentRequest) returns(PaymentResponse);
+    rpc PaymentSuccess(ConfirmRequest) returns(ConfirmResponse);
+}
+
+message ConfirmResponse{
+    string Status = 1;
+    string Invoice_ID = 2;
+}
+
+message ConfirmRequest{
+    string User_ID = 1;
+    string Invoice_ID = 2;
+    string Payment_ID = 3;
+    string Order_ID = 4;
+    string Plan = 5;
+    string Amount = 6;
+    string Signature = 7;
+}
+
+message PaymentResponse {
+    string User_ID = 1;
+    uint32 Invoice_ID = 2;
+    string Plan = 3;
+    uint32 Amount = 4;
+    string Order_ID = 5;
+}
+
+message PaymentRequest{
+    string User_id =1;
+    uint32 Invoice_id = 2;
 }
 
 message InvoiceRequest {
@@ -57,7 +87,7 @@ message USubscription {
     string duration =3;     
     double price = 4;      
     double gst = 5;        
-    double total_price = 6;
+    uint32 total_price = 6;
 }
 
 message UserStatsResponse {

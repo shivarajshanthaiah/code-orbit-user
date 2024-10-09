@@ -26,4 +26,6 @@ type UserServiceInter interface {
 
 	GetAllPlansService(p *pb.UserNoParam) (*pb.UPlanList, error)
 	GenerateInvoiceService(ctx context.Context, req *pb.InvoiceRequest) (*pb.Response, error)
+	MakePaymentService(ctx context.Context, req *pb.PaymentRequest) (*pb.PaymentResponse, error)
+	PaymentSuccessService(ctx context.Context, req *pb.ConfirmRequest) (*pb.ConfirmResponse, error)
 }

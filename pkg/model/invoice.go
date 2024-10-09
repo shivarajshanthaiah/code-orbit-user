@@ -10,14 +10,14 @@ type Invoice struct {
 	SubscriptionID int
 	PaymentID      string
 	Plan           string
-	Amount         float64
+	Amount         uint32
 	PaymentStatus  string `gorm:"default:PENDING"`
 }
 
 type RazorPay struct {
-	UserID          string
+	InvoiceID       uint32
 	RazorPaymentID  string
 	RazorPayOrderID string
 	Signature       string
-	AmountPaid      float64
+	AmountPaid      uint32
 }

@@ -25,5 +25,5 @@ message AdSubscription {
     string duration = 3;    
     double price = 4;      
     double gst = 5;        
-    double total_price = 6;
+    uint32 total_price = 6;
 }
