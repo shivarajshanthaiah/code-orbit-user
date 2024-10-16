@@ -14,4 +14,7 @@ type UserRepoInter interface {
 	FindInvoiceByID(invoiceID uint) (*model.Invoice, error)
 	UpdateInvoice(invoice *model.Invoice) error
 	CreateRazorPayment(payment *model.RazorPay) error
+
+	FindAllPrimeUsers() ([]model.User, error)
+	UpdateUserMembership(user model.User) error
 }

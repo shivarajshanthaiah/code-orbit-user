@@ -12,6 +12,7 @@ require (
 	golang.org/x/crypto v0.26.0
 	google.golang.org/grpc v1.66.1
 	google.golang.org/protobuf v1.34.2
+	gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.12
 )

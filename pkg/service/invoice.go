@@ -125,10 +125,7 @@ func (u *UserService) MakePaymentService(ctx context.Context, req *pb.PaymentReq
 		return nil, errors.New("this invoice is already paid")
 	}
 
-	// Convert the amount to paisa (multiply by 100)
 	amountInPaisa := invoice.Amount * 100
-
-	// Create Razorpay client using the credentials from the config
 	razorpayClient := razorpay.NewClient(config.RAZORPAYKEYID, config.RAZORPAYSECRETKEY)
 
 	orderData := map[string]interface{}{

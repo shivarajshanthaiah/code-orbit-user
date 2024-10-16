@@ -6,6 +6,7 @@ import (
 	"github.com/shivaraj-shanthaiah/code_orbit_user/config"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/clients/admin"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/clients/problem"
+	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/cron"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/db"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/handler"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/repo"
@@ -35,6 +36,12 @@ func Init() {
 	}
 
 	userRepo := repo.NewUserRepository(db)
+
+	ci := cron.NewCron(userRepo)
+	if err := ci.SheduleJob(); err != nil {
+		log.Fatalf("Failed to schedule cron job: %v", err)
+	}
+	ci.InitCron()
 
 	userService := service.NewUserService(userRepo, redis, twilio, problemClient, adminClient)
 
