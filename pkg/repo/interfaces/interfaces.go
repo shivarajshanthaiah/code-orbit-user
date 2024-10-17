@@ -1,6 +1,9 @@
 package interfaces
 
-import "github.com/shivaraj-shanthaiah/code_orbit_user/pkg/model"
+import (
+	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/model"
+	"gorm.io/gorm"
+)
 
 type UserRepoInter interface {
 	CreateUser(user *model.User) (string, error)
@@ -17,4 +20,9 @@ type UserRepoInter interface {
 
 	FindAllPrimeUsers() ([]model.User, error)
 	UpdateUserMembership(user model.User) error
+
+	FindAllUsersCount() *gorm.DB
+	FindUsersByCondition(condition string) *gorm.DB
+	CountByCondition(condition string) int32
+	SumAmountsByCondition(condition string) uint32
 }

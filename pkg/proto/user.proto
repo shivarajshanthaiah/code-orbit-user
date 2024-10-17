@@ -29,6 +29,31 @@ service UserService{
     rpc GetUserInvoices(ID) returns (InvoiceList);
     rpc MakePayment(PaymentRequest) returns(PaymentResponse);
     rpc PaymentSuccess(ConfirmRequest) returns(ConfirmResponse);
+
+    rpc GetUserProfileStats (UserStatsRequest) returns (UserStatsProfileResponse);
+    rpc GetSubscriptionStats (SubscriptionStatsRequest) returns (SubscriptionStatsResponse);
+}
+
+message SubscriptionStatsRequest {}
+
+message SubscriptionStatsResponse {
+    int32 basic_plan_subscribers = 1;
+    int32 standard_plan_subscribers = 2;
+    int32 premium_plan_subscribers = 3;
+    uint32 total_amount_collected_lifetime = 4;
+    uint32 total_amount_collected_weekly = 5;
+    uint32 total_amount_collected_monthly = 6;
+    uint32 total_amount_collected_yearly = 7;
+}
+
+message UserStatsRequest {}
+
+message UserStatsProfileResponse {
+    int32 total_users = 1;
+    int32 active_users = 2;
+    int32 blocked_users = 3;
+    int32 prime_users = 4;
+    int32 non_prime_users = 5;
 }
 
 message ConfirmResponse{

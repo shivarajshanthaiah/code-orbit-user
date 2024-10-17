@@ -28,4 +28,7 @@ type UserServiceInter interface {
 	GenerateInvoiceService(ctx context.Context, req *pb.InvoiceRequest) (*pb.Response, error)
 	MakePaymentService(ctx context.Context, req *pb.PaymentRequest) (*pb.PaymentResponse, error)
 	PaymentSuccessService(ctx context.Context, req *pb.ConfirmRequest) (*pb.ConfirmResponse, error)
+
+	GetAllUsersStatsService(p *pb.UserStatsRequest) (*pb.UserStatsProfileResponse, error)
+	GetSubscriptionStatsService(p *pb.SubscriptionStatsRequest) (*pb.SubscriptionStatsResponse, error)
 }

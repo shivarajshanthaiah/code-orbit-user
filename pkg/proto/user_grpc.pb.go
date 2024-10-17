@@ -40,6 +40,8 @@ type UserServiceClient interface {
 	GetUserInvoices(ctx context.Context, in *ID, opts ...grpc.CallOption) (*InvoiceList, error)
 	MakePayment(ctx context.Context, in *PaymentRequest, opts ...grpc.CallOption) (*PaymentResponse, error)
 	PaymentSuccess(ctx context.Context, in *ConfirmRequest, opts ...grpc.CallOption) (*ConfirmResponse, error)
+	GetUserProfileStats(ctx context.Context, in *UserStatsRequest, opts ...grpc.CallOption) (*UserStatsProfileResponse, error)
+	GetSubscriptionStats(ctx context.Context, in *SubscriptionStatsRequest, opts ...grpc.CallOption) (*SubscriptionStatsResponse, error)
 }
 
 type userServiceClient struct {
@@ -212,6 +214,24 @@ func (c *userServiceClient) PaymentSuccess(ctx context.Context, in *ConfirmReque
 	return out, nil
 }
 
+func (c *userServiceClient) GetUserProfileStats(ctx context.Context, in *UserStatsRequest, opts ...grpc.CallOption) (*UserStatsProfileResponse, error) {
+	out := new(UserStatsProfileResponse)
+	err := c.cc.Invoke(ctx, "/pb.UserService/GetUserProfileStats", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetSubscriptionStats(ctx context.Context, in *SubscriptionStatsRequest, opts ...grpc.CallOption) (*SubscriptionStatsResponse, error) {
+	out := new(SubscriptionStatsResponse)
+	err := c.cc.Invoke(ctx, "/pb.UserService/GetSubscriptionStats", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -234,6 +254,8 @@ type UserServiceServer interface {
 	GetUserInvoices(context.Context, *ID) (*InvoiceList, error)
 	MakePayment(context.Context, *PaymentRequest) (*PaymentResponse, error)
 	PaymentSuccess(context.Context, *ConfirmRequest) (*ConfirmResponse, error)
+	GetUserProfileStats(context.Context, *UserStatsRequest) (*UserStatsProfileResponse, error)
+	GetSubscriptionStats(context.Context, *SubscriptionStatsRequest) (*SubscriptionStatsResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -294,6 +316,12 @@ func (UnimplementedUserServiceServer) MakePayment(context.Context, *PaymentReque
 }
 func (UnimplementedUserServiceServer) PaymentSuccess(context.Context, *ConfirmRequest) (*ConfirmResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PaymentSuccess not implemented")
+}
+func (UnimplementedUserServiceServer) GetUserProfileStats(context.Context, *UserStatsRequest) (*UserStatsProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfileStats not implemented")
+}
+func (UnimplementedUserServiceServer) GetSubscriptionStats(context.Context, *SubscriptionStatsRequest) (*SubscriptionStatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSubscriptionStats not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -632,6 +660,42 @@ func _UserService_PaymentSuccess_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetUserProfileStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserStatsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserProfileStats(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserService/GetUserProfileStats",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserProfileStats(ctx, req.(*UserStatsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetSubscriptionStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SubscriptionStatsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetSubscriptionStats(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserService/GetSubscriptionStats",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetSubscriptionStats(ctx, req.(*SubscriptionStatsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -710,6 +774,14 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PaymentSuccess",
 			Handler:    _UserService_PaymentSuccess_Handler,
+		},
+		{
+			MethodName: "GetUserProfileStats",
+			Handler:    _UserService_GetUserProfileStats_Handler,
+		},
+		{
+			MethodName: "GetSubscriptionStats",
+			Handler:    _UserService_GetSubscriptionStats_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
