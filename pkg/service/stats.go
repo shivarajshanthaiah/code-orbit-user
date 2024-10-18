@@ -1,6 +1,9 @@
 package service
 
 import (
+	"context"
+
+	problempb "github.com/shivaraj-shanthaiah/code_orbit_user/pkg/clients/problem/problempb"
 	pb "github.com/shivaraj-shanthaiah/code_orbit_user/pkg/proto"
 )
 
@@ -58,4 +61,44 @@ func (u *UserService) GetSubscriptionStatsService(p *pb.SubscriptionStatsRequest
 		TotalAmountCollectedMonthly:  totalAmountMonthly,
 		TotalAmountCollectedYearly:   totalAmountYearly,
 	}, nil
+}
+
+func (a *UserService) UserGetProblemStatsService(req *pb.UProblemStatsRequest) (*pb.UProblemStatsResponse, error) {
+	ctx := context.Background()
+
+	result, err := a.ProblemClient.GetProblemStats(ctx, &problempb.ProblemStatsRequest{})
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.UProblemStatsResponse{
+		TotalProblems:      result.TotalProblems,
+		EasyProblems:       result.EasyProblems,
+		MediumProblems:     result.MediumProblems,
+		HardProblems:       result.HardProblems,
+		TypeProblemCount:   result.TypeProblemCount,
+		PremiumProblems:    result.PremiumProblems,
+		NonPremiumProblems: result.NonPremiumProblems,
+	}, nil
+}
+
+func (a *UserService) UserGetLeaderboardStatsService(req *pb.ULeaderboardRequest) (*pb.ULeaderboardResponse, error) {
+	ctx := context.Background()
+    response, err := a.ProblemClient.GetLeaderboard(ctx, &problempb.LeaderboardRequest{})
+    if err != nil {
+        return nil, err
+    }
+
+    var leaderboardEntries []*pb.ULeaderboardEntry
+    for _, entry := range response.Leaderboard {
+        leaderboardEntries = append(leaderboardEntries, &pb.ULeaderboardEntry{
+            UserId:      entry.UserId,
+            SolvedCount: entry.SolvedCount,
+			Rank: entry.Rank,
+        })
+    }
+
+    return &pb.ULeaderboardResponse{
+        Leaderboard: leaderboardEntries,
+    }, nil
 }

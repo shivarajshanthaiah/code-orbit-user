@@ -42,6 +42,8 @@ type UserServiceClient interface {
 	PaymentSuccess(ctx context.Context, in *ConfirmRequest, opts ...grpc.CallOption) (*ConfirmResponse, error)
 	GetUserProfileStats(ctx context.Context, in *UserStatsRequest, opts ...grpc.CallOption) (*UserStatsProfileResponse, error)
 	GetSubscriptionStats(ctx context.Context, in *SubscriptionStatsRequest, opts ...grpc.CallOption) (*SubscriptionStatsResponse, error)
+	UserGetProblemStats(ctx context.Context, in *UProblemStatsRequest, opts ...grpc.CallOption) (*UProblemStatsResponse, error)
+	UserGetLeaderboardStats(ctx context.Context, in *ULeaderboardRequest, opts ...grpc.CallOption) (*ULeaderboardResponse, error)
 }
 
 type userServiceClient struct {
@@ -232,6 +234,24 @@ func (c *userServiceClient) GetSubscriptionStats(ctx context.Context, in *Subscr
 	return out, nil
 }
 
+func (c *userServiceClient) UserGetProblemStats(ctx context.Context, in *UProblemStatsRequest, opts ...grpc.CallOption) (*UProblemStatsResponse, error) {
+	out := new(UProblemStatsResponse)
+	err := c.cc.Invoke(ctx, "/pb.UserService/UserGetProblemStats", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UserGetLeaderboardStats(ctx context.Context, in *ULeaderboardRequest, opts ...grpc.CallOption) (*ULeaderboardResponse, error) {
+	out := new(ULeaderboardResponse)
+	err := c.cc.Invoke(ctx, "/pb.UserService/UserGetLeaderboardStats", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -256,6 +276,8 @@ type UserServiceServer interface {
 	PaymentSuccess(context.Context, *ConfirmRequest) (*ConfirmResponse, error)
 	GetUserProfileStats(context.Context, *UserStatsRequest) (*UserStatsProfileResponse, error)
 	GetSubscriptionStats(context.Context, *SubscriptionStatsRequest) (*SubscriptionStatsResponse, error)
+	UserGetProblemStats(context.Context, *UProblemStatsRequest) (*UProblemStatsResponse, error)
+	UserGetLeaderboardStats(context.Context, *ULeaderboardRequest) (*ULeaderboardResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -322,6 +344,12 @@ func (UnimplementedUserServiceServer) GetUserProfileStats(context.Context, *User
 }
 func (UnimplementedUserServiceServer) GetSubscriptionStats(context.Context, *SubscriptionStatsRequest) (*SubscriptionStatsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSubscriptionStats not implemented")
+}
+func (UnimplementedUserServiceServer) UserGetProblemStats(context.Context, *UProblemStatsRequest) (*UProblemStatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserGetProblemStats not implemented")
+}
+func (UnimplementedUserServiceServer) UserGetLeaderboardStats(context.Context, *ULeaderboardRequest) (*ULeaderboardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserGetLeaderboardStats not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -696,6 +724,42 @@ func _UserService_GetSubscriptionStats_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UserGetProblemStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UProblemStatsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UserGetProblemStats(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserService/UserGetProblemStats",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UserGetProblemStats(ctx, req.(*UProblemStatsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UserGetLeaderboardStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ULeaderboardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UserGetLeaderboardStats(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserService/UserGetLeaderboardStats",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UserGetLeaderboardStats(ctx, req.(*ULeaderboardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -782,6 +846,14 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSubscriptionStats",
 			Handler:    _UserService_GetSubscriptionStats_Handler,
+		},
+		{
+			MethodName: "UserGetProblemStats",
+			Handler:    _UserService_UserGetProblemStats_Handler,
+		},
+		{
+			MethodName: "UserGetLeaderboardStats",
+			Handler:    _UserService_UserGetLeaderboardStats_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

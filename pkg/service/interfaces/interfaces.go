@@ -31,4 +31,6 @@ type UserServiceInter interface {
 
 	GetAllUsersStatsService(p *pb.UserStatsRequest) (*pb.UserStatsProfileResponse, error)
 	GetSubscriptionStatsService(p *pb.SubscriptionStatsRequest) (*pb.SubscriptionStatsResponse, error)
+	UserGetProblemStatsService(req *pb.UProblemStatsRequest) (*pb.UProblemStatsResponse, error)
+	UserGetLeaderboardStatsService(req *pb.ULeaderboardRequest) (*pb.ULeaderboardResponse, error)
 }
