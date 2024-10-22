@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/shivaraj-shanthaiah/code_orbit_user/config"
-	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/clients/admin"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/clients/problem"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/cron"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/db"
@@ -30,11 +29,6 @@ func Init() {
 		log.Fatal("failed to connect to problem client")
 	}
 
-	adminClient, err := admin.ClientDial(*cnfg)
-	if err != nil {
-		log.Fatal("failed to connect to admin client")
-	}
-
 	userRepo := repo.NewUserRepository(db)
 
 	ci := cron.NewCron(userRepo)
@@ -43,7 +37,7 @@ func Init() {
 	}
 	ci.InitCron()
 
-	userService := service.NewUserService(userRepo, redis, twilio, problemClient, adminClient)
+	userService := service.NewUserService(userRepo, redis, twilio, problemClient)
 
 	userHandler := handler.NewUserHandler(userService)
 

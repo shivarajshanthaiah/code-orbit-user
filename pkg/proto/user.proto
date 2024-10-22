@@ -24,7 +24,10 @@ service UserService{
     rpc SubmitCode(UserSubmissionRequest) returns(UserSubmissionResponse);
     rpc GetUserStats(ID) returns(UserStatsResponse);
 
-    rpc UserGetAllPlans(UserNoParam) returns(UPlanList);
+    rpc AddSubscriptionPlan(USubscription) returns(Response);
+    rpc GetAllPlans(UserNoParam) returns(UPlanList);
+    rpc UpdatePlan(USubscription) returns(USubscription);
+
     rpc GenerateInvoice(InvoiceRequest) returns (Response);
     rpc GetUserInvoices(ID) returns (InvoiceList);
     rpc MakePayment(PaymentRequest) returns(PaymentResponse);

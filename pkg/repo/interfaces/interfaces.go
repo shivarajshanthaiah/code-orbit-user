@@ -13,6 +13,11 @@ type UserRepoInter interface {
 	UpdateUser(user *model.User) error
 	FindAllUsers() (*[]model.User, error)
 
+	CreateSubscription(plan *model.Subscription) error
+	GetAllPlans() (*[]model.Subscription, error)
+	GetPlanByID(planID uint) (*model.Subscription, error)
+	UpdatePlan(plan *model.Subscription) error
+
 	CreateInvoice(invoice *model.Invoice) error
 	FindInvoiceByID(invoiceID uint) (*model.Invoice, error)
 	UpdateInvoice(invoice *model.Invoice) error

@@ -10,7 +10,6 @@ import (
 
 	"github.com/razorpay/razorpay-go"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/config"
-	adminpb "github.com/shivaraj-shanthaiah/code_orbit_user/pkg/clients/admin/adminpb"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/clients/rabbitmq"
 	"github.com/shivaraj-shanthaiah/code_orbit_user/pkg/model"
 	pb "github.com/shivaraj-shanthaiah/code_orbit_user/pkg/proto"
@@ -52,11 +51,7 @@ func (u *UserService) GenerateInvoiceService(ctx context.Context, req *pb.Invoic
 		}, err
 	}
 
-	subscriptionReq := &adminpb.SubscriptionID{
-		ID: req.SubsriptionId,
-	}
-
-	subscription, err := u.AdminClient.GetSubscriptionByID(ctx, subscriptionReq)
+	subscription, err := u.Repo.GetPlanByID(uint(req.SubsriptionId))
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +91,7 @@ func (u *UserService) GenerateInvoiceService(ctx context.Context, req *pb.Invoic
 	message := fmt.Sprintf(
 		"Your Invoice Details:\nName : %s\nInvoiceID: %d\nPlan: %s\nDuration: %s\nPrice: %.2f\nGST: %.2f\nTotal Price: %d",
 		userdetails.UserName, invoice.ID, subscription.Plan, subscription.Duration,
-		subscription.Price, subscription.Gst, subscription.TotalPrice,
+		subscription.Price, subscription.GST, subscription.TotalPrice,
 	)
 
 	subject := "Pending Invoice Details"
