@@ -7,7 +7,7 @@ import (
 )
 
 func PublishNotifications(data Messages) error {
-	conn, err := amqp091.Dial("amqp://guest:guest@localhost:5672/")
+	conn, err := amqp091.Dial("amqp://guest:guest@rabbitmq:5672/")
 	if err != nil {
 		return err
 	}
